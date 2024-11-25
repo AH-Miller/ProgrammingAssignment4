@@ -3,8 +3,8 @@ library(dplyr)
 library(readr)
 
 # Read activity and feature names
-features <- read.table("features.txt")[, 2]
-activities <- read.table("activity_labels.txt",
+features <- read.table("UCI HAR Dataset/features.txt")[, 2]
+activities <- read.table("UCI HAR Dataset/activity_labels.txt",
                          col.names = c('activity label', 'activity name'))
 
 # Extract measurements on the mean and standard deviation for each measurement
@@ -12,20 +12,20 @@ features_required <- grep("(mean|std)\\(\\)", features)
 
 # Read train set
 # Uses 'features' to provide descriptive variable names
-X_train <- read.table("train/X_train.txt",
+X_train <- read.table("UCI HAR Dataset/train/X_train.txt",
                       col.names = features)[, features_required]
-subjects_train <- read.table("train/subject_train.txt",
+subjects_train <- read.table("UCI HAR Dataset/train/subject_train.txt",
                              col.names = c('subject'))
-activities_train <- read.table("train/y_train.txt",
+activities_train <- read.table("UCI HAR Dataset/train/y_train.txt",
                                col.names = c('activity'))
 train_data <- cbind(subjects_train, activities_train, X_train)
 
 # Read test set
-X_test <- read.table("test/X_test.txt",
+X_test <- read.table("UCI HAR Dataset/test/X_test.txt",
                      col.names = features)[, features_required]
-subjects_test <- read.table("test/subject_test.txt",
+subjects_test <- read.table("UCI HAR Dataset/test/subject_test.txt",
                             col.names = c('subject'))
-activities_test <- read.table("test/y_test.txt",
+activities_test <- read.table("UCI HAR Dataset/test/y_test.txt",
                               col.names = c('activity'))
 test_data <- cbind(subjects_test, activities_test, X_test)
 
@@ -41,6 +41,7 @@ combined_data <- combined_data %>%
 # Tidy up variable names
 colnames(combined_data) <- gsub("\\.+", ".", colnames(combined_data))
 colnames(combined_data) <- gsub("\\.$", "", colnames(combined_data))
+colnames(combined_data) <- gsub("BodyBody", "Body", colnames(combined_data))
 
 # Create a second, independent tidy data set with the average of each variable
 # for each activity and each subject.
